@@ -77,6 +77,15 @@ class ClouderDomain(models.Model):
             self.deploy()
 
 
+class ClouderOrganization(models.Model):
+    """ It defines organizations for Clouder """
+
+    _name = 'clouder.organization'
+    _inherit = ['clouder.model']
+
+    
+
+
 class ClouderBase(models.Model):
     """
     Define the base object, which represent all websites hosted in this clouder
