@@ -29,7 +29,8 @@
         'clouder_template_shinken',
         'clouder_template_postfix',
         'clouder_template_proxy',
-        'clouder_template_mysql'
+        'clouder_template_mysql',
+        'clouder_template_piwik',
     ],
     'author': 'Yannick Buron (Clouder)',
     'license': 'Other OSI approved licence',

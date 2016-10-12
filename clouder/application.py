@@ -188,8 +188,19 @@ class ClouderApplication(models.Model):
     required = fields.Boolean('Required?')
     sequence = fields.Integer('Sequence')
     child_ids = fields.Many2many(
-        'clouder.application', 'clouder_application_parent_child_rel',
-        'parent_id', 'child_id', 'Childs')
+        'clouder.application',
+        'clouder_application_parent_child_rel',
+        'parent_ids',
+        'child_ids',
+        'Children',
+    )
+    parent_ids = fields.Many2many(
+        'clouder.application',
+        'clouder_application_parent_child_rel',
+        'child_ids',
+        'parent_ids',
+        'Parents',
+    )
     container_ids = fields.One2many('clouder.container', 'application_id',
                                     'Containers')
     update_strategy = fields.Selection([

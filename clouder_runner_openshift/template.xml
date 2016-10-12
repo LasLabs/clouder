@@ -10,9 +10,11 @@
 
         <record id="image_openshift" model="clouder.image">
             <field name="name">img_openshift</field>
-            <field name="current_version">1</field>
-            <field name="privileged">True</field>
             <field name="parent_from">openshift/origin</field>
+        </record>
+        <record id="image_version_openshift" model="clouder.image.version">
+            <field name="name">1</field>
+            <field name="image_id" ref="image_openshift" />
         </record>
         <record id="image_openshift_volume_rootfs" model="clouder.image.volume">
             <field name="image_id" ref="image_openshift"/>
@@ -60,9 +62,6 @@
             <field name="expose">internet</field>
         </record>
 
-
-
-
         <record id="application_openshift" model="clouder.application">
             <field name="name">openshift</field>
             <field name="code">openshift</field>
@@ -70,12 +69,8 @@
             <field name="type_id" ref="application_type_openshift"/>
             <field name="default_image_id" ref="image_openshift"/>
             <field name="container_time_between_save">9999</field>
-            <field name="container_saverepo_change">30</field>
-            <field name="container_saverepo_expiration">90</field>
             <field name="container_save_expiration">5</field>
             <field name="base_time_between_save">9999</field>
-            <field name="base_saverepo_change">30</field>
-            <field name="base_saverepo_expiration">90</field>
             <field name="base_save_expiration">5</field>
         </record>
 

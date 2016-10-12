@@ -116,10 +116,13 @@
         <record id="image_magento_data" model="clouder.image">
             <field name="name">img_magento_data</field>
             <field name="type_id" ref="application_type_magento"/>
-            <field name="current_version">8.0</field>
             <field name="parent_from">clouder/clouder-magento-data</field>
             <field name="parent_id"/>
             <field name="dockerfile"/>
+        </record>
+        <record id="image_version_magento_data" model="clouder.image.version">
+            <field name="name">8.0</field>
+            <field name="image_id" ref="image_magento_data" />
         </record>
         <record id="image_magento_data_volume_logs" model="clouder.image.volume">
             <field name="image_id" ref="image_magento_data"/>
@@ -167,25 +170,21 @@
         </record>
         <record id="image_magento_exec_volume_logs" model="clouder.image.volume">
             <field name="image_id" ref="image_magento_exec"/>
-            <field name="from_code">data</field>
             <field name="name">/opt/magento/exec/var/log</field>
             <field name="nosave" eval="True"/>
         </record>
         <record id="image_magento_exec_volume_config" model="clouder.image.volume">
             <field name="image_id" ref="image_magento_exec"/>
-            <field name="from_code">data</field>
             <field name="name">/opt/magento/exec/app/etc</field>
             <field name="nosave" eval="True"/>
         </record>
         <record id="image_magento_exec_volume_local_modules" model="clouder.image.volume">
             <field name="image_id" ref="image_magento_exec"/>
-            <field name="from_code">data</field>
             <field name="name">/opt/magento/exec/app/code/local</field>
             <field name="nosave" eval="True"/>
         </record>
         <record id="image_magento_exec_volume_sites_enabled" model="clouder.image.volume">
             <field name="image_id" ref="image_magento_exec"/>
-            <field name="from_code">data</field>
             <field name="name">/etc/apache2/sites-enabled</field>
             <field name="nosave" eval="True"/>
         </record>
@@ -248,7 +247,6 @@
             <field name="required" eval="True"/>
             <field name="auto" eval="True"/>
             <field name="make_link" eval="True"/>
-            <field name="service" eval="True"/>
         </record>
         <record id="application_magento_link_postfix" model="clouder.application.link">
             <field name="application_id" ref="application_magento"/>
@@ -275,7 +273,7 @@
             <field name="name">Magento Data</field>
             <field name="code">data</field>
             <field name="type_id" ref="application_type_magento"/>
-            <field name="parent_id" ref="application_magento"/>
+            <field name="parent_ids" eval="[(4, ref('application_magento'))]"/>
             <field name="default_image_id" ref="image_magento_data"/>
             <field name="sequence">1</field>
             <field name="required" eval="True"/>
