@@ -38,6 +38,7 @@ from random import SystemRandom
 from openerp import models, fields, api, _, release
 
 from .exceptions import ClouderError
+from .thread import ThreadMethod
 
 _logger = logging.getLogger(__name__)
 
@@ -236,6 +237,29 @@ class ClouderModel(models.AbstractModel):
         return os.path.join('/tmp', str(name), *add_path)
 
     @api.multi
+    def _thread_records(self, method, *args, **kwargs):
+        """ It runs the specified method for every record in a separate thread
+
+        Params:
+            method: (str) Method to run on the record
+            *args: (mixed) Arguments to pass to method
+            **kwargs: (mixed) Keyword arguments to pass to method
+        Returns:
+            (dict) Results from methods, keyed by record ID
+        """
+        threads = {}
+        for rec_id in self:
+            method = getattr(rec_id, method)
+            if not callable(method):
+                continue
+            threads[rec_id.id] = ThreadMethod(method, *args, **kwargs)
+            threads[rec_id.id].start()
+        for key, thread in threads.iteritems():
+            thread.join()
+            threads[key]
+        return threads
+
+    @api.multi
     @contextmanager
     def _private_env(self):
         """ It provides an isolated environment/commit
@@ -246,13 +270,13 @@ class ClouderModel(models.AbstractModel):
         Yields:
             Current ``self``, but in a new environment
         """
-        # with api.Environment.manage():
-        #     with registry(self.env.cr.dbname).cursor() as cr:
-        #         env = api.Environment(cr, self.env.uid, self.env.context)
-        #         _logger.debug('Created new env %s for %s', env, self)
-        yield self
-        self.env.cr.commit()  # pylint: disable=E8102
-        #         _logger.debug('Cursor %s has been committed', cr)
+        with api.Environment.manage():
+            with registry(self.env.cr.dbname).cursor() as cr:
+                env = api.Environment(cr, self.env.uid, self.env.context)
+                _logger.debug('Created new env %s for %s', env, self)
+                yield self
+                self.env.cr.commit()  # pylint: disable=E8102
+                _logger.debug('Cursor %s has been committed', cr)
 
     @api.multi
     @api.constrains('name')
@@ -282,11 +306,18 @@ class ClouderModel(models.AbstractModel):
 
     @api.multi
     def log(self, message):
+        """ It threads and runs _log for each record """
+        self._thread_records('_log', message)
+
+    @api.multi
+    def _log(self, message):
         """
         Add a message in the logs specified in context.
 
         :param message: The message which will be logged.
         """
+
+        self.ensure_one()
 
         with self._private_env() as self:
 

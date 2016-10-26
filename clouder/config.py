@@ -22,6 +22,7 @@
 
 import os.path
 import re
+import threading
 
 from openerp import models, fields, api
 
@@ -205,8 +206,15 @@ class ClouderConfigSettings(models.Model):
 
     @api.multi
     def update_containers_exec(self):
+        """ It threads and runs _update_containers_exec for each record """
+        self._thread_records('_update_containers_exec')
+
+    @api.multi
+    def _update_containers_exec(self):
         """
         """
+
+        self.ensure_one()
 
         with self._private_env() as self:
 
@@ -226,9 +234,16 @@ class ClouderConfigSettings(models.Model):
 
     @api.multi
     def reset_bases_exec(self):
+        """ It threads and runs _reset_bases_exec for each record """
+        self._thread_records('_reset_bases_exec')
+
+    @api.multi
+    def _reset_bases_exec(self):
         """
         Reset all bases marked for reset.
         """
+
+        self.ensure_one()
 
         with self._private_env() as self:
 
@@ -253,9 +268,16 @@ class ClouderConfigSettings(models.Model):
 
     @api.multi
     def certs_renewal_exec(self):
+        """ It threads and runs _certs_renewal_exec for each record """
+        self._thread_records('_certs_renewal_exec')
+
+    @api.multi
+    def _certs_renewal_exec(self):
         """
         Reset all bases marked for reset.
         """
+
+        self.ensure_one()
 
         with self._private_env() as self:
 
