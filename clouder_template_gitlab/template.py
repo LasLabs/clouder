@@ -22,7 +22,7 @@
 
 from openerp import models, api, modules
 from datetime import datetime
-from openerp.addons.clouder import model
+from openerp.addons.clouder.models import model
 
 
 class ClouderApplicationTypeOption(models.Model):
