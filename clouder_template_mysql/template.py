@@ -22,7 +22,7 @@
 
 
 from openerp import models, api
-import openerp.addons.clouder.model as model
+import openerp.addons.clouder.models.model as model
 
 
 class ClouderApplicationTypeOption(models.Model):
