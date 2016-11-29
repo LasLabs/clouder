@@ -37,6 +37,8 @@ class ClouderBase(models.Model):
     _inherit = 'clouder.base'
     DELTA_CERT_RENEW = timedelta(days=45)
 
+    dh_param = fields.Text('Diffie-Helman Params')
+
     @property
     def nginx_configfile(self):
         """
@@ -139,6 +141,25 @@ class ClouderBase(models.Model):
                 'dh_param': self._create_dh_param(proxy),
             })
         return res
+
+    @api.multi
+    def _create_dh_param(self, proxy, length=4096):
+        """ It creates & returns new Diffie-Helman parameters
+
+        Args:
+            proxy: (clouder.container) Proxy target to execute on
+            length: (int) Bit length
+        Returns:
+            (str) Diffie-helman parameters
+        """
+        self.ensure_one()
+        dh_dir = '/etc/ssl/dh_param'
+        dh_path = os.path.join(dh_dir, '%s.pem' % self.fulldomain)
+        proxy.execute(['mkdir', '-p', dh_dir])
+        proxy.execute([
+            'openssl', 'dhparam', '-out', dh_path, str(length),
+        ])
+        return proxy.execute(['cat', dh_path])
 
     @api.multi
     def _get_proxy_links(self):

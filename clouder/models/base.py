@@ -6,7 +6,6 @@
 from datetime import datetime, timedelta
 import logging
 import re
-import os.path
 
 from openerp import models, fields, api
 
@@ -79,7 +78,6 @@ class ClouderBase(models.Model):
     cert_key = fields.Text('Cert Key')
     cert_cert = fields.Text('Cert')
     cert_renewal_date = fields.Date('Cert renewal date')
-    dh_param = fields.Text('Diffie-Helman Params')
     reset_id = fields.Many2one('clouder.base', 'Reset with this base')
     backup_ids = fields.Many2many(
         'clouder.container', 'clouder_base_backup_rel',
@@ -899,22 +897,3 @@ class ClouderBase(models.Model):
         Renew a certificate
         """
         return True
-
-    @api.multi
-    def _create_dh_param(self, proxy, length=4096):
-        """ It creates & returns new Diffie-Helman parameters
-
-        Args:
-            proxy: (clouder.container) Proxy target to execute on
-            length: (int) Bit length
-        Returns:
-            (str) Diffie-helman parameters
-        """
-        self.ensure_one()
-        dh_dir = '/etc/ssl/dh_param'
-        dh_path = os.path.join(dh_dir, '%s.pem' % self.fulldomain)
-        proxy.execute(['mkdir', '-p', dh_dir])
-        proxy.execute([
-            'openssl', 'dhparam', '-out', dh_path, str(length),
-        ])
-        return proxy.execute(['cat', dh_path])
