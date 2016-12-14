@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
 {
     'name': 'Clouder Template Elasticsearch',
@@ -9,6 +9,7 @@
     'depends': [
         'clouder',
         'clouder_template_proxy',
+        'clouder_template_dns',
     ],
     'author': 'LasLabs Inc.',
     'license': 'LGPL-3',

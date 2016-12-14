@@ -1,4 +1,4 @@
-FROM yannickburon/clouder:base
+FROM clouder/base:3.4
 MAINTAINER Dave Lasley <dave@laslabs.com>
 
 # Loosely based on https://github.com/docker-library/elasticsearch/blob/master/Dockerfile.template
