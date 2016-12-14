@@ -1,0 +1,38 @@
+FROM yannickburon/clouder:base
+MAINTAINER Dave Lasley <dave@laslabs.com>
+
+# Install Build Dependencies
+
+ENV buildDeps "build-base \
+               gcc \
+               git \
+               go \
+               libtool"
+
+RUN apk add --no-cache $buildDeps
+
+# Install CFSSL
+
+RUN git clone --depth=1 https://github.com/cloudflare/cfssl.git /go/src/github.com/cloudflare/cfssl
+
+WORKDIR /go/src/github.com/cloudflare/cfssl
+
+RUN set -x \
+	&& go get github.com/GeertJohan/go.rice/rice \
+    && rice embed-go -i=./cli/serve \
+	&& cp -R /go/src/github.com/cloudflare/cfssl/vendor/github.com/cloudflare/cfssl_trust /etc/cfssl \
+	&& go build -o /usr/bin/cfssl ./cmd/cfssl \
+	&& go build -o /usr/bin/cfssljson ./cmd/cfssljson \
+	&& go build -o /usr/bin/mkbundle ./cmd/mkbundle \
+	&& go build -o /usr/bin/multirootca ./cmd/multirootca \
+	&& apk del $buildDeps \
+	&& rm -rf /go \
+	&& echo "Build complete."
+
+# Create and Change to PKI Dir
+RUN mkdir -p /var/pki
+WORKDIR /var/pki
+
+# Enter
+ENTRYPOINT ["cfssl"]
+CMD ["--help"]
