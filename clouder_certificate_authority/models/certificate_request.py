@@ -14,6 +14,10 @@ class ClouderCertificateRequest(models.Model):
     _inherit = 'clouder.certificate.abstract'
     _description = 'Clouder Certificate Request'
 
+    name = fields.Char(
+        string='Common Name',
+        required=True,
+    )
     authority_id = fields.Many2one(
         string='Cert Authority',
         comodel_name='clouder.certificate.authority',
@@ -21,9 +25,8 @@ class ClouderCertificateRequest(models.Model):
         ondelete='cascade',
     )
     host_ids  = fields.Many2one(
-        string='Common Name',
+        string='Hosts',
         comodel_name='clouder.certificate.host',
-        required=True,
     )
     subject_info_ids = fields.Many2many(
         string='Names',
@@ -34,6 +37,14 @@ class ClouderCertificateRequest(models.Model):
         string='Public Key',
         comodel_name='clouder.key.public',
     )
+    strength = fields.Integer(
+        default=4096,
+        required=True,
+    )
+    algorithm = fields.Selection(
+        default='rsa',
+        selection=lambda s: s.env['clouder.key.abstract']._get_algorithms(),
+    )
     computed = fields.Serialized(
         compute="_compute_computed",
     )
@@ -43,14 +54,21 @@ class ClouderCertificateRequest(models.Model):
         """ It computes the keys required for the JSON request """
         for record in self:
             record.computed = {
-                'CN': record.common_name_id.name,
+                'CN': record.name,
                 'names': [
                     name.computed for name in record.subject_info_ids
                 ],
+                'hosts': [
+                    '%s:%s' % (h.host, h.port) for h in record.host_ids
+                ],
+                'key': {
+                    'algo': record.algorithm,
+                    'size': record.strength,
+                },
             }
 
     @api.multi
-    def get_json(self):
+    def to_json(self):
         """ It returns the JSON representation of this object """
         self.ensure_one()
         return json.dumps(self.computed)

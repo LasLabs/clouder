@@ -8,7 +8,7 @@ from odoo import api, fields, models
 
 
 class ClouderCertificateAuthority(models.Model):
-    """ It provides an interface for controlling a Cert Authority """
+    """ It provides an interface for controlling a Cert Authority. """
 
     _name = 'clouder.certificate.authority'
     _description = 'Clouder Certificate Authority'
@@ -38,27 +38,14 @@ class ClouderCertificateAuthority(models.Model):
         string='CSR',
         comodel_name='clouder.certificate.request',
     )
-    sign_policy_default_id = fields.Many2one(
-        string='Default Signing Policy',
-        comodel_name='clouder.certificate.policy.sign',
-        required=True,
-    )
-    sign_policy_profile_ids = fields.Many2many(
-        string='Signing Policy Profiles',
-        comodel_name='clouder.certificate.policy.sign',
-    )
-    auth_policy_ids = fields.Many2many(
-        string='Auth Policies',
-        comodel_name='clouder.certificate.policy.auth',
-        compute='_compute_auth_policy_ids',
-    )
     exec_service_id = fields.Many2one(
         string='Executor Service',
         comodel_name='clouder.service',
         compute='_compute_exec_service_id',
     )
-    computed_config = fields.Serialized(
-        compute="_compute_computed_config",
+    config_id = fields.Many2one(
+        string='Configuration',
+        comodel_name='clouder.config.certificate.server',
     )
 
     @api.multi
@@ -76,26 +63,3 @@ class ClouderCertificateAuthority(models.Model):
                 lambda s: s.code == 'exec',
             )
             record.exec_service_id = service_ids[0]
-
-    @api.multi
-    def _compute_computed_config(self):
-        """ It computes the keys required for the JSON request """
-        for record in self:
-            profiles = {
-                p.name: p.computed for p in record.sign_policy_profile_ids
-            }
-            auth_keys = {
-                auth.name: auth.computed for auth in record.auth_policy_ids
-            }
-            record.computed_config = {
-                'signing': record.sign_policy_default_id.computed,
-                'profiles': profiles,
-                'auth_keys': auth_keys,
-            }
-
-    @api.multi
-    def get_json(self, computed_type='config'):
-        """ It returns the JSON representation of this object """
-        self.ensure_one()
-        attribute = get(self, 'computed_%s' % computed_type)
-        return json.dumps(attribute)

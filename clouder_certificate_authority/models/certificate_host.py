@@ -14,3 +14,7 @@ class ClouderCertificateHost(models.Model):
     name = fields.Char(
         required=True,
     )
+    host = fields.Char(
+        required=True,
+    )
+    port = fields.Integer()

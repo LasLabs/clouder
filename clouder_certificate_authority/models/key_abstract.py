@@ -16,6 +16,7 @@ class ClouderKeyAbstract(models.Model):
         default=4096,
     )
     algorithm = fields.Selection(
+        default='rsa',
         selection=lambda s: s._get_algorithms(),
     )
     is_private = fields.Boolean()
