@@ -4,7 +4,7 @@
 
 from os import path
 
-from openerp import api, models
+from odoo import api, models
 
 
 class ClouderBackup(models.Model):
