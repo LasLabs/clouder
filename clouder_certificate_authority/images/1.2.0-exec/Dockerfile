@@ -1,4 +1,4 @@
-FROM yannickburon/clouder:base
+FROM clouder/base:3.4
 MAINTAINER Dave Lasley <dave@laslabs.com>
 
 # Install Build Dependencies
@@ -35,4 +35,4 @@ WORKDIR /var/pki
 
 # Enter
 ENTRYPOINT ["cfssl"]
-CMD ["--help"]
+CMD ["cat"]

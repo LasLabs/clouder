@@ -4,7 +4,7 @@
 
 {
     'name': 'Clouder Certificate Authority',
-    'version': '9.0.10.0.0',
+    'version': '10.0.10.0.0',
     'category': 'Clouder',
     'depends': [
         'clouder',
@@ -20,10 +20,8 @@
         'data/image_volume.xml',
         'data/application_tag.xml',
         'data/application_type.xml',
-        'data/application_type_option.xml',
         'data/application_template.xml',
         'data/application.xml',
-        'data/application_link.xml',
     ],
     'installable': True,
     'application': False,
