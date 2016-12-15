@@ -20,7 +20,6 @@
         'data/image_port.xml',
         'data/image_volume.xml',
         'data/application_type.xml',
-        'data/application_type_option.xml',
         'data/application_template.xml',
         'data/application.xml',
         'data/application_link.xml',

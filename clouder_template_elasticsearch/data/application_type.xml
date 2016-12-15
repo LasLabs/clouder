@@ -9,9 +9,6 @@
             >
         <field name="name">elasticsearch</field>
         <field name="system_user">elasticsearch</field>
-        <field name="tag_ids"
-               eval="[(6, 0, [ref('clouder.tag_database')])]"
-               />
     </record>
     
 </odoo>
