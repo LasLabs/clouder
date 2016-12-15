@@ -2,11 +2,11 @@
    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
    :alt: License: LGPL-3
 
-============================
-Clouder Certificte Authority
-============================
+========================
+Clouder Certificate Base
+========================
 
-This module provides a Certificate Authority using Clouder and CFSSL,
+This module provides a concept of Certificates and Keys for Clouder.
 
 
 Configuration
