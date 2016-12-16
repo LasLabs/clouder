@@ -6,7 +6,7 @@ from odoo import api, fields, models
 
 
 class ClouderKeyAbstract(models.Model):
-    """ It provides attributes and methods related to all keys """
+    """ It provides attributes and methods related to all keys. """
 
     _name = 'clouder.key.abstract'
     _inherit = 'clouder.certificate.abstract'
