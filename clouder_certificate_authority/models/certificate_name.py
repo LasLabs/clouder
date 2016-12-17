@@ -4,8 +4,10 @@
 
 from odoo import api, fields, models
 
+from ..api import API
 
-class ClouderCertificateName(models.Model):
+
+class ClouderCertificateName(models.Model, API):
     """ It provides the concept of a cert's SubjectInfo """
 
     _name = 'clouder.certificate.name'
@@ -27,7 +29,7 @@ class ClouderCertificateName(models.Model):
         default=lambda s: s.env.user.city,
     )
     company_id = fields.Many2one(
-        string='Company',
+        string='Organization',
         model='res.company',
         required=True,
         domain='[(company_id, "=", company_id)]',
@@ -36,18 +38,18 @@ class ClouderCertificateName(models.Model):
     organization_unit = fields.Char(
         required=True,
     )
-    computed = fields.Serialized(
-        compute="_compute_computed",
+    api_object = fields.Binary(
+        compute="_compute_api_object",
     )
 
     @api.multi
-    def _compute_computed(self):
+    def _compute_api_object(self):
         """ It computes the keys required for the JSON request """
         for record in self:
-            record.computed = {
-                'C': record.country_id.code,
-                'ST': record.state_id.name,
-                'L': record.city,
-                'O': record.company_id.name,
-                'OU': record.organization_unit,
-            }
+            record.api_object = self.cfssl.SubjectInfo(
+                record.company_id.name,
+                record.organizational_unit,
+                record.city,
+                record.state_id.name,
+                record.country_id.code,
+            )

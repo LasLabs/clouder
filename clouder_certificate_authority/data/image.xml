@@ -20,5 +20,13 @@
         <field name="parent_from">lasley/cfssl-exec</field>
         <field name="volumes_from">data</field>
     </record>
+    
+    <record id="image_openssl_exec" model="clouder.image">
+        <field name="name">image_openssl_exec</field>
+        <field name="template_ids"
+               eval="[(4, [ref('image_template_openssl_exec')])]"
+               />
+        <field name="parent_from">lasley/openssl-exec</field>
+    </record>
 
 </odoo>

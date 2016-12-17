@@ -28,18 +28,16 @@ class ClouderCertificatePolicySign(models.Model):
         required=True,
         default=(365 * 24),
     )
-    computed = fields.Serialized(
-        compute="_compute_computed",
+    api_object = fields.Binary(
+        compute="_compute_api_object",
     )
 
     @api.multi
-    def _compute_computed(self):
+    def _compute_api_object(self):
         """ It computes the keys required for the JSON request """
         for record in self:
-            record.computed = {
-                'auth_key': record.auth_policy_id.name,
-                'expiry': '%sh' % expire_hours,
-                'usages': [
-                    usage.code for usage in record.usage_ids
-                ],
-            }
+            record.api_object = self.cfssl.PolicySign({
+                'name': record.name,
+                'usage_policies': record.usage_ids.mapped('api_object'),
+                'auth_policy': record.auth_policy_id.api_object,
+            })

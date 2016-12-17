@@ -10,4 +10,10 @@
         <field name="name">CFSSL</field>
     </record>
     
+    <record id="application_template_openssl"
+            model="clouder.application.template"
+            >
+        <field name="name">OpenSSL</field>
+    </record>
+    
 </odoo>

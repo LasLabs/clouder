@@ -22,6 +22,7 @@
         'data/application_type.xml',
         'data/application_template.xml',
         'data/application.xml',
+        'data/certificate_policy_use.xml',
     ],
     'installable': True,
     'application': False,

@@ -22,8 +22,20 @@ class ClouderCertificatePolicyUse(models.Model):
         required=True,
         default=5,
     )
+    api_object = fields.Binary(
+        compute="_compute_api_object",
+    )
 
     _sql_constraints = [
         ('code_uniq', 'UNIQUE(code)', 'Code must be unique.'),
         ('name_uniq', 'UNIQUE(name)', 'Name must be unique.'),
     ]
+
+    @api.multi
+    def _compute_api_object(self):
+        """ It computes the keys required for the JSON request """
+        for record in self:
+            record.api_object = self.cfssl.PolicyUse(
+                name=record.name,
+                code=record.code,
+            )

@@ -4,8 +4,10 @@
 
 from odoo import api, fields, models
 
+from ..api import API
 
-class ClouderConfigCertificateAbstract(models.AbstractModel):
+
+class ClouderConfigCertificateAbstract(models.AbstractModel, API):
     """ It provides data handling for certificate client + server configs. """
 
     _name = 'clouder.config.certificate.abstract'
@@ -25,30 +27,18 @@ class ClouderConfigCertificateAbstract(models.AbstractModel):
         comodel_name='clouder.certificate.policy.auth',
         compute='_compute_auth_policy_ids',
     )
-    computed = fields.Serialized(
-        compute="_compute_computed",
+    api_object = fields.Binary(
+        compute="_compute_api_object",
     )
 
     @api.multi
-    def _compute_computed(self):
+    def _compute_api_object(self):
         """ It computes the keys required for the JSON request. """
         for record in self:
-            profiles = {
-                p.name: p.computed for p in record.sign_policy_profile_ids
-            }
-            auth_keys = {
-                auth.name: auth.computed for auth in record.auth_policy_ids
-            }
-            record.computed_config = {
-                'signing': {
-                    'default': record.sign_policy_default_id.computed,
-                    'profiles': profiles,
-                },
-                'auth_keys': auth_keys,
-            }
-
-    @api.multi
-    def to_json(self):
-        """ It returns the JSON representation of this object """
-        self.ensure_one()
-        return json.dumps(self.computed)
+            profiles = record.sign_policy_profile_ids.mapped('api_object')
+            auth_keys = record.auth_policy_ids.mapped('api_object')
+            record.api_object = self.cfssl.ConfigMixer(
+                sign_policy=record.sign_policy_default_id.api_object,
+                sign_policies=profiles,
+                auth_policies=auth_keys,
+            )

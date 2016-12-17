@@ -2,10 +2,12 @@
 # Copyright 2016 LasLabs Inc.
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
 
-from odoo import models
+from odoo import api, fields, models
+
+from ..api import API
 
 
-class ClouderConfigCertificateClient(models.Model):
+class ClouderConfigCertificateClient(models.Model, API):
     """ It provides data handling for certificate client configs. """
 
     _name = 'clouder.config.certificate.client'
@@ -19,10 +21,16 @@ class ClouderConfigCertificateClient(models.Model):
     )
 
     @api.multi
-    def _compute_computed(self):
+    def _compute_api_object(self):
         """ It computes the keys required for the JSON request. """
         for record in self:
-            super(ClouderConfigCertificateClient, record)._compute_computed()
-            record.computed['remotes'] = {
-                r.name: '%s:%s' % (r.host, r.port) for r in record.remote_ids
+            super(ClouderConfigCertificateClient, record)._compute_api_object()
+            remotes = {
+                remote.name: remote.api_object for remote in record.remote_ids
             }
+            record.api_object = self.cfssl.ConfigClient(
+                sign_policy_default=record.api_object.sign_policy,
+                sign_policies_add=record.api_object.sign_policies,
+                auth_policies=record.api_object.auth_policies,
+                remotes=remotes,
+            )

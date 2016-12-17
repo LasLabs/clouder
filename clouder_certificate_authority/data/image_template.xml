@@ -16,4 +16,10 @@
         <field name="name">image_template_cfssl_exec</field>
     </record>
     
+    <record id="image_template_openssl_exec"
+            model="clouder.image.template"
+            >
+        <field name="name">image_template_openssl_exec</field>
+    </record>
+    
 </odoo>

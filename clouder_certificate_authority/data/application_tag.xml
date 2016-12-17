@@ -8,4 +8,8 @@
         <field name="name">cert_authority</field>
     </record>
 
+    <record id="tag_openssl" model="clouder.application.tag">
+        <field name="name">openssl</field>
+    </record>
+
 </odoo>

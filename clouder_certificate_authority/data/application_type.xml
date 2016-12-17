@@ -14,4 +14,14 @@
                />
     </record>
     
+    <record id="application_type_openssl"
+            model="clouder.application.type"
+            >
+        <field name="name">openssl</field>
+        <field name="system_user">root</field>
+        <field name="tag_ids"
+               eval="[(6, 0, [ref('tag_openssl')])]"
+               />
+    </record>
+    
 </odoo>

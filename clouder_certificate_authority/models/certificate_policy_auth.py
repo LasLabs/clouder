@@ -26,8 +26,8 @@ class ClouderCertificatePolicyAuth(models.Model):
         default='standard',
         required=True,
     )
-    computed = fields.Serialized(
-        compute="_compute_computed",
+    api_object = fields.Binary(
+        compute="_compute_api_object",
     )
 
     _sql_constraints = [
@@ -41,10 +41,11 @@ class ClouderCertificatePolicyAuth(models.Model):
         return passwd.encode('hex')[:16]
 
     @api.multi
-    def _compute_computed(self):
+    def _compute_api_object(self):
         """ It computes the keys required for the JSON request """
         for record in self:
-            record.computed = {
+            record.api_object = self.cfssl.PolicyAuth({
+                'name': record.name,
                 'key': record.key,
-                'type': record.key_type,
-            }
+                'key_type': record.key_type,
+            })

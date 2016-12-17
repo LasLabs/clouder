@@ -4,6 +4,17 @@
 
 <odoo>
 
+    <record id="application_openssl_exec" model="clouder.application">
+        <field name="name">OpenSSL</field>
+        <field name="code">exec</field>
+        <field name="type_id" ref="application_type_openssl" />
+        <field name="tag_ids" eval="[(4, ref('clouder.tag_exec'))]" />
+        <field name="default_image_id" ref="image_openssl_exec" />
+        <field name="sequence">1</field>
+        <field name="required" eval="True"/>
+        <field name="update_strategy">auto</field>
+    </record>
+
     <record id="application_cfssl_data" model="clouder.application">
         <field name="name">CFSSL Data</field>
         <field name="code">data</field>
@@ -11,7 +22,7 @@
         <field name="tag_ids" eval="[(4, ref('clouder.tag_data'))]" />
         <field name="default_image_id" ref="image_cfssl_data" />
         <field name="sequence">1</field>
-        <field name="required" eval="True"/>
+        <field name="required" eval="True" />
     </record>
 
     <record id="application_cfssl_exec" model="clouder.application">
@@ -21,8 +32,11 @@
         <field name="tag_ids" eval="[(4, ref('clouder.tag_exec'))]" />
         <field name="default_image_id" ref="image_cfssl_exec" />
         <field name="sequence">2</field>
-        <field name="required" eval="True"/>
+        <field name="required" eval="True" />
         <field name="update_strategy">auto</field>
+        <field name="child_ids"
+               eval="[(4, ref('application_openssl_exec'))]"
+               />
     </record>
 
     <record id="application_cfssl" model="clouder.application">
@@ -36,7 +50,7 @@
                      ]"
                />
         <field name="sequence">1</field>
-        <field name="required" eval="True"/>
+        <field name="required" eval="True" />
     </record>
 
 </odoo>

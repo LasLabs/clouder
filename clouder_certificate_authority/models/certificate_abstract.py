@@ -6,13 +6,14 @@ from odoo import api, fields, models
 
 
 class ClouderCertificateAbstract(models.AbstractModel):
-    """ It provides attributes and methods related to all cert files """
+    """ It provides attributes and methods related to all cert files. """
 
     _name = 'clouder.certificate.abstract'
     _description = 'Clouder Certificate Abstract'
 
     name = fields.Char(
         required=True,
+        help='SHA-1 Sum of Certificate',
     )
     description = fields.Char()
     mime_sub_type = fields.Selection(
@@ -23,7 +24,7 @@ class ClouderCertificateAbstract(models.AbstractModel):
         readonly=True,
         computed='_compute_mime_type',
     )
-    attachment_id = fields.Many2one( 
+    attachment_id = fields.Many2one(
         string='Key',
         comodel_name='ir.attachment',
         context="""{
@@ -38,6 +39,10 @@ class ClouderCertificateAbstract(models.AbstractModel):
     )
     data = fields.Text(
         related='attachment_id.datas',
+    )
+    request_id = fields.Many2one(
+        string='CSR',
+        comodel_name='clouder.certificate.request',
     )
 
     @api.model
