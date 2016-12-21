@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Sale - Clouder",
     "summary": "Provides the ability to sell Clouder instances.",
@@ -8,7 +8,7 @@
     "category": "Clouder",
     "website": "https://github.com/clouder-community/clouder",
     "author": "LasLabs",
-    "license": "AGPL-3",
+    "license": "LGPL-3",
     "application": False,
     "installable": True,
     "depends": [

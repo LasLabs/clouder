@@ -18,12 +18,6 @@ class ClouderContractLine(models.Model):
         required=True,
         ondelete='restrict',
     )
-    service_id = fields.Many2one(
-        string='Clouder Service',
-        comodel_name='clouder.service',
-        related='metric_interface_id.service_id',
-        required=True,
-    )
     metric_interface_id = fields.Many2one(
         string='Metric Interface',
         comodel_name='clouder.metric.interface',

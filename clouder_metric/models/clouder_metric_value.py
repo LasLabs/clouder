@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models
 
 
 class ClouderMetricValue(models.Model):
-    """ It provides a record of metric values used in billin """
+    """ It provides a record of metric values used in billing. """
 
     _name = 'clouder.metric.value'
 
@@ -21,5 +21,14 @@ class ClouderMetricValue(models.Model):
     uom_id = fields.Many2one(
         string='Unit of Measure',
         comodel_name='product.uom',
-        related='interface_id.uom_id',
+    )
+    date_start = fields.Datetime(
+        string='Metric Start',
+    )
+    date_end = fields.Datetime(
+        string='Metric End',
+    )
+    date_create = fields.Datetime(
+        string='Creation Time',
+        default=lambda s: field.Datetime.now(),
     )
