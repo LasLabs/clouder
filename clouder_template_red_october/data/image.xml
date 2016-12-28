@@ -9,7 +9,7 @@
         <field name="template_ids"
                eval="[(4, [ref('image_template_redoctober_data')])]"
                />
-        <field name="parent_from">lasley/redoctober-data</field>
+        <field name="parent_from">clouder/base:3.4</field>
     </record>
     
     <record id="image_redoctober_exec" model="clouder.image">

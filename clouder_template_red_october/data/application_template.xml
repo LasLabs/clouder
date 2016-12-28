@@ -7,7 +7,7 @@
     <record id="application_template_redoctober"
             model="clouder.application.template"
             >
-        <field name="name">CFSSL</field>
+        <field name="name">Red October</field>
     </record>
     
 </odoo>

@@ -8,8 +8,16 @@
             model="clouder.image.port"
             >
         <field name="template_id" ref="image_template_redoctober_exec" />
-        <field name="name">redoctober-http</field>
-        <field name="local_port">8888</field>
+        <field name="name">https</field>
+        <field name="local_port">8080</field>
+    </record>
+
+    <record id="image_port_redoctober_comm"
+            model="clouder.image.port"
+            >
+        <field name="template_id" ref="image_template_redoctober_exec" />
+        <field name="name">comm</field>
+        <field name="local_port">8081</field>
     </record>
 
 </odoo>

@@ -8,10 +8,7 @@
             model="clouder.application.type"
             >
         <field name="name">redoctober</field>
-        <field name="system_user">root</field>
-        <field name="tag_ids"
-               eval="[(6, 0, [ref('tag_cert_authority')])]"
-               />
+        <field name="system_user">redoctober</field>
     </record>
     
 </odoo>

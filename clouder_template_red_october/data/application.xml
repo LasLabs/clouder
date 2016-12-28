@@ -5,7 +5,7 @@
 <odoo>
 
     <record id="application_redoctober_data" model="clouder.application">
-        <field name="name">CFSSL Data</field>
+        <field name="name">Red October Data</field>
         <field name="code">data</field>
         <field name="type_id" ref="application_type_redoctober" />
         <field name="tag_ids" eval="[(4, ref('clouder.tag_data'))]" />
@@ -15,7 +15,7 @@
     </record>
 
     <record id="application_redoctober_exec" model="clouder.application">
-        <field name="name">CFSSL Exec</field>
+        <field name="name">Red October Exec</field>
         <field name="code">exec</field>
         <field name="type_id" ref="application_type_redoctober" />
         <field name="tag_ids" eval="[(4, ref('clouder.tag_exec'))]" />
@@ -26,7 +26,7 @@
     </record>
 
     <record id="application_redoctober" model="clouder.application">
-        <field name="name">CFSSL</field>
+        <field name="name">Red October</field>
         <field name="code">redoctober</field>
         <field name="type_id" ref="application_type_redoctober" />
         <field name="tag_ids" eval="[(4, ref('tag_cert_authority'))]" />

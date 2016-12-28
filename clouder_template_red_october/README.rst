@@ -6,7 +6,7 @@
 Clouder Template - Red October
 ==============================
 
-This module provides a Clouder Template for Red Octover.
+This module provides a Clouder Template for Red October.
 
 Red October is a cryptographically-secure implementation of the two-person rule
 to protect sensitive data. From a technical perspective, Red October is a
@@ -41,12 +41,13 @@ Usage
 
 To use this module, you need to:
 
-#. Create a CFSSL Service in the Clouder Control Panel
+#. Create a Red October application in Clouder
 
 Known issues / Roadmap
 ======================
 
-* Add more Signature Profile options - https://github.com/cloudflare/redoctober/blob/86ecfbe5750ebf05565e4c80104d0a7919792fee/doc/cmd/redoctober.txt#L113
+* The container is currently using a self-signed certificate. This should be changed once a CA exists.
+* Runit is being installed via community repos, which are HTTP only. This is insecure.
 
 Bug Tracker
 ===========
