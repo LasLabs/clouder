@@ -5,12 +5,12 @@
 from odoo import api, models
 
 
-class ClouderContainer(models.Model):
-    _inherit = 'clouder.container'
+class ClouderService(models.Model):
+    _inherit = 'clouder.service'
 
     @api.multi
     def deploy_post(self):
-        super(ClouderContainer, self).deploy_post()
+        super(ClouderService, self).deploy_post()
         for record in self:
             if record.application_id.type_id.name == 'redoctober':
                 if record.application_id.code == 'data':

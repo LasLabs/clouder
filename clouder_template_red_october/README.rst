@@ -41,12 +41,13 @@ Usage
 
 To use this module, you need to:
 
-#. Create a Red October application in Clouder
+#. Create a new service in the Clouder Control Panel
+#. Select ``Red October`` as the application & configure everything else to preference
 
 Known issues / Roadmap
 ======================
 
-* The container is currently using a self-signed certificate. This should be changed once a CA exists.
+* The service is currently using a self-signed certificate. This should be changed once a CA exists.
 * Runit is being installed via community repos, which are HTTP only. This is insecure.
 
 Bug Tracker

@@ -29,7 +29,6 @@
         <field name="name">Red October</field>
         <field name="code">redoctober</field>
         <field name="type_id" ref="application_type_redoctober" />
-        <field name="tag_ids" eval="[(4, ref('tag_cert_authority'))]" />
         <field name="child_ids"
                eval="[(4, ref('application_redoctober_data')),
                       (4, ref('application_redoctober_exec')),
