@@ -49,6 +49,11 @@ Known issues / Roadmap
 
 * The service is currently using a self-signed certificate. This should be changed once a CA exists.
 * Runit is being installed via community repos, which are HTTP only. This is insecure.
+* Path isn't persisting so there is a symlink to redoctober being created. This should be fixed at some point,
+  likely in a base Go container instead of here.
+* Image volume is being mounted as root, then chown is happening in the docker entrypoint. This sseems weird,
+  so should investigate further, but is how the CloudFlare people rigged it up so it's possible they're simply
+  smarter than me.
 
 Bug Tracker
 ===========
