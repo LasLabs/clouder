@@ -54,6 +54,7 @@ Known issues / Roadmap
 * Image volume is being mounted as root, then chown is happening in the docker entrypoint. This sseems weird,
   so should investigate further, but is how the CloudFlare people rigged it up so it's possible they're simply
   smarter than me.
+* Add dependency cleanup to Dockerfile.
 
 Bug Tracker
 ===========

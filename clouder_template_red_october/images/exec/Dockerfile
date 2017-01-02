@@ -43,7 +43,9 @@ ENV RO_CERTS="${RO_DATA}/server.crt" \
 ENTRYPOINT ["/usr/lib/go/src/github.com/cloudflare/redoctober/scripts/docker-entrypoint.sh"]
 
 CMD ["redoctober", \
-     "-addr=:8080", \
+     "-addr=0.0.0.0:8080", \
      "-vaultpath=/var/lib/redoctober/data/diskrecord.json", \
      "-certs=/var/lib/redoctober/data/server.crt", \
-     "-keys=/var/lib/redoctober/data/server.pem"]
+     "-keys=/var/lib/redoctober/data/server.pem", \
+     "-metrics-host=0.0.0.0", \
+     "-metrics-port=8081"]
