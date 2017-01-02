@@ -6,7 +6,3 @@ RUN apk add --no-cache openssl \
                        pip
 
 RUN pip install cryptography
-
-# Enter
-ENTRYPOINT ["openssl"]
-CMD ["cat"]

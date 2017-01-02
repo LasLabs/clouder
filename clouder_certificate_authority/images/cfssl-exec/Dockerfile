@@ -33,6 +33,13 @@ RUN set -x \
 RUN mkdir -p /var/pki
 WORKDIR /var/pki
 
-# Enter
-ENTRYPOINT ["cfssl"]
-CMD ["cat"]
+# Setup Environment
+ENV CFSSL_DATA=/var/pki \
+    CFSSL_CERT=$CFSSL_DATA/ca.pem \
+    CFSSL_KEY=$CFSSL_DATA/ca_key.pem
+
+CMD ["cfssl", \
+     "serve", \
+     "-address=:8080", \
+     "-ca $CFFSL_CERT", \
+     "-ca-key $CFSSL_KEY"]

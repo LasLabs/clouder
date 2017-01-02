@@ -9,17 +9,16 @@ from odoo.exceptions import UserError
 
 from ..api import API
 
-
 class ClouderCertificateAuthority(models.Model, API):
     """ It provides an interface for controlling a Cert Authority. """
 
     _name = 'clouder.certificate.authority'
     _description = 'Clouder Certificate Authority'
-    _inherits = {'clouder.application': 'application_id'}
+    _inherits = {'clouder.service': 'service_id'}
 
-    base_id = fields.Many2one(
+    service_id = fields.Many2one(
         string='Certificate Authority',
-        comodel_name='clouder.application',
+        comodel_name='clouder.service',
         required=True,
         ondelete='cascade',
         domain=lambda s: "[('tag_ids', '=', %d)]" % s.enf.ref(
@@ -53,11 +52,6 @@ class ClouderCertificateAuthority(models.Model, API):
                     'default_public_key_id': certificate_id,
                     }""",
         help='Certificate Signing Request.',
-    )
-    exec_service_id = fields.Many2one(
-        string='Executor Service',
-        comodel_name='clouder.service',
-        compute='_compute_exec_service_id',
     )
     config_id = fields.Many2one(
         string='Configuration',

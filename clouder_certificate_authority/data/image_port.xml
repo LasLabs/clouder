@@ -8,8 +8,8 @@
             model="clouder.image.port"
             >
         <field name="template_id" ref="image_template_cfssl_exec" />
-        <field name="name">cfssl-http</field>
-        <field name="local_port">8888</field>
+        <field name="name">http</field>
+        <field name="local_port">8080</field>
     </record>
 
 </odoo>
