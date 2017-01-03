@@ -1,5 +1,5 @@
 apache-libcloud
-cfssl
+cfssl==0.0.2b215
 cryptography
 erppeek
 paramiko
