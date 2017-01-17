@@ -10,6 +10,7 @@
         <field name="template_id" ref="image_template_redoctober_exec" />
         <field name="name">https</field>
         <field name="local_port">8080</field>
+        <field name="expose">local</field>
     </record>
 
     <record id="image_port_redoctober_metrics"
@@ -18,6 +19,7 @@
         <field name="template_id" ref="image_template_redoctober_exec" />
         <field name="name">metrics</field>
         <field name="local_port">8081</field>
+        <field name="expose">local</field>
     </record>
 
 </odoo>
