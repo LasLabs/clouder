@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2016 LasLabs Inc.
+# Copyright 2016-2017 LasLabs Inc.
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 import logging
@@ -21,7 +21,7 @@ class ClouderContract(models.Model):
         comodel_name='account.analytic.account',
         index=True,
         require=True,
-        ondelete='restrict',
+        ondelete='cascade',
     )
 
     _sql_constraints = [
@@ -64,20 +64,18 @@ class ClouderContract(models.Model):
         )
 
         Args:
-            account: (account.analytic.account) Contract that recurring
-                invoice line belongs to. This is called 
-            account_line: (account.analytic.invoice.line) Recurring invoice
+            account (account.analytic.account): Contract that recurring
+                invoice line belongs to. This is called
+            account_line (account.analytic.invoice.line): Recurring invoice
                 line being referenced.
-            invoice: (account.invoice) Invoice that is being created.
+            invoice (account.invoice): Invoice that is being created.
         Returns:
             (int) Quantity to use on invoice line in the UOM defined on the
                 ``contract_line``.
         """
-        contract = self._get_contract_by_account(account, create=True)
         invoice_policy = account_line.product_id.invoice_policy
         invoice_policy_map = self.invoice_policy_map
         try:
-            invoice
             method = invoice_policy_map[invoice_policy]
         except KeyError:
             _logger.info(_(
@@ -94,12 +92,17 @@ class ClouderContract(models.Model):
         """ It returns default values to create and link new ClouderContracts.
 
         Args:
-            account: (account.analytic.account) Account that ClouderContract
+            account (account.analytic.account): Account that ClouderContract
                 will reference.
         Returns:
             (dict) Values fed to ``create`` in ``_get_contract_by_account``.
         """
+        number = self.env['ir.sequence'].next_by_code('clouder.contract')
+        # Default to the current users company if not set
+        company_id = account.company_id.id or self.env.user.company_id.id
         return {
+            'name': number,
+            'company_id': company_id,
             'ref_contract_id': account.id,
         }
 
@@ -116,12 +119,19 @@ class ClouderContract(models.Model):
         """
         contract = self.search([('ref_contract_id', '=', account.id)])
         if create and not contract:
-            contract = self.create(self._create_default_vals())
+            contract = self.create(self._create_default_vals(account))
         return contract
 
     @api.multi
     def _get_quantity_flat(self, account_line, invoice):
-        """ It returns the base quantity with no calculations """
+        """ It returns the base quantity with no calculations
+        Args:
+            account_line (account.analytic.invoice.line): Recurring invoice
+                line being referenced.
+            invoice (account.invoice): Invoice that is being created.
+        Returns:
+            (float) Quantity with no calculations performed
+        """
         return account_line.quantity
 
     @api.multi
@@ -129,17 +139,42 @@ class ClouderContract(models.Model):
         """ It functions like flat rate for the most part
 
         Args:
-            account_line: (account.analytic.invoice.line) Recurring invoice
+            account_line (account.analytic.invoice.line): Recurring invoice
                 line being referenced.
-            invoice: (account.invoice) Invoice that is being created.
+            invoice (account.invoice): Invoice that is being created.
         Returns:
-            (int) Quantity to use on invoice line in the UOM defined on the
+            (float) Quantity to use on invoice line in the UOM defined on the
                 ``contract_line``.
         """
-        raise NotImplementedError
-        self.get_quantity_flat(account_line, invoice)
+        return account_line.quantity
 
     @api.multi
     def _get_quantity_usage(self, account_line, invoice):
-        """ It provides a quantity based on unbilled and used metrics """
-        raise NotImplementedError
+        """ It provides a quantity based on unbilled and used metrics
+        Args:
+            account_line (account.analytic.invoice.line): Recurring invoice
+                line being referenced.
+            invoice (account.invoice): Invoice that is being created.
+        Returns:
+            (float) Quantity to use on invoice line in the UOM defined on the
+                ``contract_line``.
+            """
+        usage = 0
+        vals = account_line.metric_interface_id.metric_value_ids
+        inv_date = fields.Datetime.from_string(invoice.date_invoice)
+        inv_delta = self.ref_contract_id.get_relative_delta(
+            self.recurring_rule_type, self.recurring_interval
+        )
+        start_date = inv_date - inv_delta
+
+        # Filter out metrics that fall within the billing period
+        def filter(rec):
+            if not all((rec.date_start, rec.date_end)):
+                return False
+            start = fields.Datetime.from_string(rec.date_start)
+            end = fields.Datetime.from_string(rec.date_end)
+            return start >= start_date and end <= inv_date
+        usage_values = vals.filtered(filter)
+        for val in usage_values:
+            usage += val.value
+        return usage

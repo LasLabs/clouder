@@ -4,7 +4,7 @@
 {
     "name": "Sale - Clouder",
     "summary": "Provides the ability to sell Clouder instances.",
-    "version": "9.0.1.0.0",
+    "version": "10.0.1.0.0",
     "category": "Clouder",
     "website": "https://github.com/clouder-community/clouder",
     "author": "LasLabs",
@@ -15,8 +15,11 @@
         "clouder",
         "contract",
         "sale",
+        "clouder_metric",
     ],
     "data": [
+        "data/sale_clouder.xml",  # Must be created before formula
         "data/contract_line_qty_formula.xml",
+        "security/ir.model.access.csv",
     ],
 }

@@ -48,6 +48,10 @@ class ClouderMetricType(models.Model):
 
     @api.model
     def _get_metric_models(self):
+        """ Returns a selection of available metric models
+        Returns:
+            (list): Additional metric models
+        """
         return [
             ('clouder.base', 'Base'),
             ('clouder.service', 'Service'),
@@ -55,6 +59,12 @@ class ClouderMetricType(models.Model):
 
     @api.multi
     def _get_query_code_context(self, interface):
+        """ Returns a query context for use
+        Args:
+            interface (clouder.metric.interface): The interface to use
+        Returns:
+            (dict): Dict with the context for the given iface and model
+        """
         self.ensure_one()
         return {
             'interface': interface,
@@ -64,6 +74,12 @@ class ClouderMetricType(models.Model):
 
     @api.model
     def save_metric_value(self, metric_interfaces):
+        """ Saves a metric value from the given interface
+        Args:
+            metric_interfaces (clouder.metric.interface): The interface to use
+        Returns:
+            None
+        """
         for iface in metric_interfaces:
             eval_context = iface.type_id._get_query_code_context(iface)
             try:
@@ -84,10 +100,12 @@ class ClouderMetricType(models.Model):
                     'is used to indicate the value that should be saved for '
                     'the query.',
                 ))
-            uom = eval_context.get('uom') or iface.uom_id    
+            uom = eval_context.get('uom') or iface.uom_id
             iface.write({
                 'metric_value_ids': [(0, 0, {
                     'value': eval_context['value'],
-                    'uom_id': uom.id,
+                    'date_start': eval_context.get('date_start'),
+                    'date_end': eval_context.get('date_end'),
+                    'uom_id': uom.id
                 })],
             })

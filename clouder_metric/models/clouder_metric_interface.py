@@ -43,7 +43,7 @@ class ClouderMetricInterface(models.Model):
         domain="[('model', '=', _name)]",
         context="""{
             'default_model': _name,
-            'default_name': '[Clouder Metric] %s' % display_name,       
+            'default_name': '[Clouder Metric] %s' % display_name,
         }""",
     )
     interval_number = fields.Integer(
@@ -52,9 +52,7 @@ class ClouderMetricInterface(models.Model):
     interval_type = fields.Selection(
         related='cron_id.interval_type',
     )
-    query_code = fields.Text(
-        # default=lambda s: s._default_query_code()
-    )
+    query_code = fields.Text()
 
     @property
     @api.multi
@@ -67,5 +65,5 @@ class ClouderMetricInterface(models.Model):
     @api.multi
     def name_get(self):
         return [
-            (r.id, '%s - %s' % (r.type_id.name, r.metric_id)) for r in self
+            (r.id, '%s - %s' % (r.type_id.name, r.metric_ref)) for r in self
         ]

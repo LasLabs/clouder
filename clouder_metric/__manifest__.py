@@ -17,4 +17,7 @@
         "contract_variable_quantity",
         "sale",
     ],
+    "data": [
+        "security/ir.model.access.csv",
+    ],
 }

@@ -1,4 +1,4 @@
-# Pending https://github.com/OCA/contract/pull/44
-contract https://github.com/laslabs/contract release/10.0/contract_variable_quantity
-# Pending https://github.com/OCA/server-tools/pull/645
-server-tools https://github.com/laslabs/server-tools feature/10.0/base_external_dbsource_elasticsearch
+connector
+contract
+# Pending https://github.com/OCA/server-tools/pull/660
+server-tools https://github.com/laslabs/server-tools feature/10.0/base_external_dbsource_elasticsearch-v10

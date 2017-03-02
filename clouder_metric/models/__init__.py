@@ -2,6 +2,6 @@
 # Copyright 2016 LasLabs Inc.
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from . import clouder_metric_interface
 from . import clouder_metric_type
+from . import clouder_metric_interface
 from . import clouder_metric_value

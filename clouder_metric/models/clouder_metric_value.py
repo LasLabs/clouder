@@ -2,7 +2,7 @@
 # Copyright 2016 LasLabs Inc.
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ClouderMetricValue(models.Model):
@@ -30,5 +30,5 @@ class ClouderMetricValue(models.Model):
     )
     date_create = fields.Datetime(
         string='Creation Time',
-        default=lambda s: field.Datetime.now(),
+        default=lambda s: fields.Datetime.now(),
     )
