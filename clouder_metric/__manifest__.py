@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Clouder - Metrics",
     "summary": "Provides Usage Metric Interface for Clouder",
@@ -8,7 +8,7 @@
     "category": "Clouder",
     "website": "https://github.com/clouder-community/clouder",
     "author": "LasLabs",
-    "license": "LGPL-3",
+    "license": "AGPL-3",
     "application": False,
     "installable": True,
     "depends": [

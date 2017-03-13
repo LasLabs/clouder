@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
 from odoo.tools import safe_eval
@@ -11,6 +11,7 @@ class ClouderMetricType(models.Model):
     """ It provides context for usage metric types """
 
     _name = 'clouder.metric.type'
+    _description = 'Clouder Metric Types'
 
     name = fields.Char()
     code = fields.Char()
@@ -38,11 +39,13 @@ class ClouderMetricType(models.Model):
         return _("# Python code. \n"
                  "Use `value = my_value` to specify the final calculated "
                  " metric value. This is required. \n"
-                 "Optionally use ``uom == product_uom_record`` to change the "
+                 "Optionally use ``uom = product_uom_record`` to change the "
                  "units that the metric is being measured in. \n"
+                 "You should also add `date_start` and `date_end`, which "
+                 "are `datetime` values to signify the date of occurrence of "
+                 "the metric value in question. \n"
                  "# You can use the following variables: \n"
-                 "#  - self: browse_record of the current ID Category "
-                 "browse_record. \n"
+                 "#  - self: browse_record of the current ID Category \n"
                  "#  - interface: browse_record of the Metrics Interface. \n"
                  "#  - metric_model: Name of the metric model type. \n")
 
@@ -50,7 +53,7 @@ class ClouderMetricType(models.Model):
     def _get_metric_models(self):
         """ Returns a selection of available metric models
         Returns:
-            (list): Additional metric models
+            list: Additional metric models
         """
         return [
             ('clouder.base', 'Base'),
@@ -63,7 +66,7 @@ class ClouderMetricType(models.Model):
         Args:
             interface (clouder.metric.interface): The interface to use
         Returns:
-            (dict): Dict with the context for the given iface and model
+            dict: Dict with the context for the given iface and model
         """
         self.ensure_one()
         return {
@@ -106,6 +109,6 @@ class ClouderMetricType(models.Model):
                     'value': eval_context['value'],
                     'date_start': eval_context.get('date_start'),
                     'date_end': eval_context.get('date_end'),
-                    'uom_id': uom.id
+                    'uom_id': uom.id,
                 })],
             })

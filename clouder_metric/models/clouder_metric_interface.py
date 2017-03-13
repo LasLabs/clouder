@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
 
@@ -12,6 +12,7 @@ class ClouderMetricInterface(models.Model):
     """
 
     _name = 'clouder.metric.interface'
+    _description = 'Clouder Metric Interfaces'
     _inherits = {'clouder.metric.type': 'type_id'}
 
     type_id = fields.Many2one(
@@ -65,5 +66,5 @@ class ClouderMetricInterface(models.Model):
     @api.multi
     def name_get(self):
         return [
-            (r.id, '%s - %s' % (r.type_id.name, r.metric_ref)) for r in self
+            (r.id, '%s - %s' % (r.type_id.name, r.metric_id.id)) for r in self
         ]

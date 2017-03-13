@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016 LasLabs Inc.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields, models
 
@@ -9,6 +9,7 @@ class ClouderMetricValue(models.Model):
     """ It provides a record of metric values used in billing. """
 
     _name = 'clouder.metric.value'
+    _description = 'Clouder Metric Values'
 
     interface_id = fields.Many2one(
         string='Interface',
