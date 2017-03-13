@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Copyright 2016-2017 LasLabs Inc.
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 _logger = logging.getLogger(__name__)
@@ -14,6 +14,7 @@ class ClouderContract(models.Model):
     """ It provides formulas specific to billing Clouder contracts. """
 
     _name = 'clouder.contract'
+    _description = 'Clouder Contracts'
     _inherits = {'account.analytic.account': 'ref_contract_id'}
 
     ref_contract_id = fields.Many2one(
@@ -35,7 +36,7 @@ class ClouderContract(models.Model):
         """ It returns a mapping of invoice policies to processing methods.
 
         Returns:
-            (dict) Mapping keyed by invoice policy type, pointing to the
+            dict: Mapping keyed by invoice policy type, pointing to the
                 method that should determine the quantity to use for
                 invoicing.
                 The method will receive the recurring contract line and the
@@ -59,18 +60,18 @@ class ClouderContract(models.Model):
 
         .. code-block:: python
 
-        result = env['clouder.contract'].get_invoice_line_quantity(
-            contract, line, invoice,
-        )
+            result = env['clouder.contract'].get_invoice_line_quantity(
+                contract, line, invoice,
+            )
 
         Args:
-            account (account.analytic.account): Contract that recurring
+            account (AccountAnalyticAccount): Contract that recurring
                 invoice line belongs to. This is called
-            account_line (account.analytic.invoice.line): Recurring invoice
+            account_line (AccountAnalyticInvoiceLine): Recurring invoice
                 line being referenced.
-            invoice (account.invoice): Invoice that is being created.
+            invoice (AccountInvoice): Invoice that is being created.
         Returns:
-            (int) Quantity to use on invoice line in the UOM defined on the
+            int: Quantity to use on invoice line in the UOM defined on the
                 ``contract_line``.
         """
         invoice_policy = account_line.product_id.invoice_policy
@@ -78,12 +79,10 @@ class ClouderContract(models.Model):
         try:
             method = invoice_policy_map[invoice_policy]
         except KeyError:
-            _logger.info(_(
+            _logger.info(
                 'No calculation method found for invoice policy "%s". '
-                'Defaulting to Flat Rate instead.'
-            ) % (
-                invoice_policy,
-            ))
+                'Defaulting to Flat Rate instead.', invoice_policy
+            )
             method = invoice_policy_map['order']
         return method(account_line, invoice)
 
@@ -92,14 +91,15 @@ class ClouderContract(models.Model):
         """ It returns default values to create and link new ClouderContracts.
 
         Args:
-            account (account.analytic.account): Account that ClouderContract
+            account (AccountAnalyticAccount): Account that ClouderContract
                 will reference.
         Returns:
-            (dict) Values fed to ``create`` in ``_get_contract_by_account``.
+            dict: Values fed to ``create`` in ``_get_contract_by_account``.
         """
         number = self.env['ir.sequence'].next_by_code('clouder.contract')
         # Default to the current users company if not set
-        company_id = account.company_id.id or self.env.user.company_id.id
+        company_id = (account.company_id and account.company_id.id or
+                      self.env.user.company_id.id)
         return {
             'name': number,
             'company_id': company_id,
@@ -111,11 +111,11 @@ class ClouderContract(models.Model):
         """ It returns the ClouderContract or possibly creates a new one.
 
         Args:
-            account: (account.analytic.account) Contract to search by.
+            account: (AccountAnalyticAccount) Contract to search by.
             create: (bool) True will create a new ClouderContract if one does
                 not already exist.
         Returns:
-            (clouder.contract) Clouder contract associated with ``account``.
+            clouder.contract: Clouder contract associated with ``account``.
         """
         contract = self.search([('ref_contract_id', '=', account.id)])
         if create and not contract:
@@ -126,11 +126,11 @@ class ClouderContract(models.Model):
     def _get_quantity_flat(self, account_line, invoice):
         """ It returns the base quantity with no calculations
         Args:
-            account_line (account.analytic.invoice.line): Recurring invoice
+            account_line (AccountAnalyticInvoiceLine): Recurring invoice
                 line being referenced.
-            invoice (account.invoice): Invoice that is being created.
+            invoice (AccountInvoice): Invoice that is being created.
         Returns:
-            (float) Quantity with no calculations performed
+            float: Quantity with no calculations performed
         """
         return account_line.quantity
 
@@ -139,11 +139,11 @@ class ClouderContract(models.Model):
         """ It functions like flat rate for the most part
 
         Args:
-            account_line (account.analytic.invoice.line): Recurring invoice
+            account_line (AccountAnalyticInvoiceLine): Recurring invoice
                 line being referenced.
-            invoice (account.invoice): Invoice that is being created.
+            invoice (AccountInvoice): Invoice that is being created.
         Returns:
-            (float) Quantity to use on invoice line in the UOM defined on the
+            float: Quantity to use on invoice line in the UOM defined on the
                 ``contract_line``.
         """
         return account_line.quantity
@@ -152,14 +152,13 @@ class ClouderContract(models.Model):
     def _get_quantity_usage(self, account_line, invoice):
         """ It provides a quantity based on unbilled and used metrics
         Args:
-            account_line (account.analytic.invoice.line): Recurring invoice
+            account_line (AccountAnalyticInvoiceLine): Recurring invoice
                 line being referenced.
-            invoice (account.invoice): Invoice that is being created.
+            invoice (AccountInvoice): Invoice that is being created.
         Returns:
-            (float) Quantity to use on invoice line in the UOM defined on the
+            float: Quantity to use on invoice line in the UOM defined on the
                 ``contract_line``.
             """
-        usage = 0
         vals = account_line.metric_interface_id.metric_value_ids
         inv_date = fields.Datetime.from_string(invoice.date_invoice)
         inv_delta = self.ref_contract_id.get_relative_delta(
@@ -174,7 +173,5 @@ class ClouderContract(models.Model):
             start = fields.Datetime.from_string(rec.date_start)
             end = fields.Datetime.from_string(rec.date_end)
             return start >= start_date and end <= inv_date
-        usage_values = vals.filtered(filter)
-        for val in usage_values:
-            usage += val.value
-        return usage
+
+        return sum(vals.filtered(filter).mapped('value')) or 0.0

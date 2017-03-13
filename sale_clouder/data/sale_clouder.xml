@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright 2016 LasLabs Inc.
-     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
         <record id="seq_clouder_contract" model="ir.sequence">
             <field name="name">Clouder Contract</field>
@@ -11,7 +10,5 @@
             <field name="prefix">CLOUD</field>
             <field name="padding">8</field>
         </record>
-
-    </data>
 
 </odoo>

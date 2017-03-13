@@ -9,6 +9,7 @@ class ClouderContractLine(models.Model):
     """ It provides the link between billing and Clouder Services. """
 
     _name = 'clouder.contract.line'
+    _description = 'Clouder Contract Lines'
     _inherits = {'account.analytic.invoice.line': 'contract_line_id'}
 
     contract_line_id = fields.Many2one(
